@@ -35,14 +35,16 @@ $request->validate([
 'title' => 'required',
 'content' => 'required',
 'category'=>'required',
-'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+'picname' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
 ]);
 $Oriblog = new oriblog;
 $Oriblog->title = $request->title;
 $Oriblog->content = $request->content;
 $Oriblog->category = $request->category;
-$Oriblog->picname = $request->file('image')->getClientOriginalName();
-$Oriblog->path= $request->file('image')->store('public/images');
+$Oriblog->path= $request->file('picname')->store('public/images');
+$fileName = time().$request->file('picname')->getClientOriginalName();
+$path = $request->file('picname')->storeAs('images', $fileName, 'public');
+$Oriblog->picname= '/storage/'.$path;
 $Oriblog->save();
 return redirect()->route('oriblogs.index')
 ->with('success','Blog has been created successfully.');
@@ -80,15 +82,16 @@ $request->validate([
 'title' => 'required',
 'content' => 'required',
 'category'=>'required',
-'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+'picname' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
 ]);
 $Oriblog = oriblog::find($id);
 $Oriblog->title = $request->title;
 $Oriblog->content = $request->content;
 $Oriblog->category = $request->category;
-$Oriblog->picname = $request->file('image')->getClientOriginalName();
-$Oriblog->path= $request->file('image')->store('public/images');
-
+$Oriblog->path= $request->file('picname')->store('public/images');
+$fileName = time().$request->file('picname')->getClientOriginalName();
+$path = $request->file('picname')->storeAs('images', $fileName, 'public');
+$Oriblog->picname= '/storage/'.$path;
 $Oriblog->save();
 return redirect()->route('oriblogs.index')
 ->with('success','Blog Has Been updated successfully');
